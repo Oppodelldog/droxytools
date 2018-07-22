@@ -1,0 +1,97 @@
+    Version="1"
+
+    [[command]]
+      name = "basic command"  # name of the command
+      isTemplate = true       # this command can be used as a template, no command will be created
+      addGroups = true        # add current systems groups  (linux only)
+      impersonate = true      # use executing user and group for execution in the container (linux only)
+      workDir = "${PWD}"        # define working directory
+      removeContainer=true    # remove container after command has finished
+      isInteractive=true      # enable interaction with the called command
+      RequireEnvVars=true    # if true, not defined env vars that are configured will lead to an error
+
+      # volume mappings
+      volumes = [
+	  "${PWD}:${PWD}",
+          "${HOME}:${HOME}",
+          "${SSH_AUTH_SOCK}:/run/ssh.sock",
+          "/etc/passwd:/etc/passwd:ro",
+          "/etc/group:/etc/group:ro",
+      ]
+
+      # environment variable mappings
+      envvars = [
+	  "PWD:${PWD}",
+          "HOME:${HOME}",
+          "SSH_AUTH_SOCK:/run/ssh.sock",
+      ]
+
+    [[command]]
+        template = "basic command"  # apply settings from template 'basic command' to this command
+    	name = "php"                # name of the command which is created by calling 'docker-proxy symlinks'
+    	entryPoint = "php"          # basic binary to execute inside the container
+    	image = "php:7.1.13"        # docker image the container is run on
+
+    [[command]]
+        template = "basic command"
+    	name = "node"
+    	entryPoint = "node"
+    	image = "node:8.4.0"
+    	portsFromParam = [
+    	    "--inspect-brk=(\\d*)",
+    	    "--inspect=(\\d*)"
+    	]
+
+    [[command]]
+        template = "basic command"
+    	name = "npm"
+    	#impersonate = false
+    	entryPoint = "npm"
+    	image = "node:8.4.0"
+
+   [[command]]
+	template = "basic command"
+	name = "ruby"
+	entryPoint = "ruby"
+	image = "ruby:2.4-jessie"
+
+   [[command]]
+        template = "basic command"
+        name = "irb"
+        entryPoint = "irb"
+        image = "ruby:2.4-jessie"
+
+   [[command]]
+        template = "basic command"
+        name = "gem"
+        entryPoint = "gem"
+        image = "ruby:2.4-jessie"
+
+   [[command]]
+        template = "basic command"
+        name = "bb-sh"
+        entryPoint = "sh"
+        image = "busybox"
+
+   [[command]]
+        template = "basic command"
+        name = "rustc"
+        entryPoint = "rustc"
+        image = "rust:1.27-slim-jessie"
+
+  [[command]]
+        template = "basic command"
+        name = "perl"
+        entryPoint = "perl"
+        image = "perl:5.20"
+
+  [[command]]
+	name = "swagger-editor"
+	image = "swaggerapi/swagger-editor"
+	isDaemon=true
+	isInteractive=false
+	impersonate=false
+	ports = ["80:8080"]
+
+
+
