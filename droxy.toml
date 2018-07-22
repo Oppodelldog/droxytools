@@ -27,12 +27,6 @@
       ]
 
     [[command]]
-        template = "basic command"  # apply settings from template 'basic command' to this command
-    	name = "php"                # name of the command which is created by calling 'docker-proxy symlinks'
-    	entryPoint = "php"          # basic binary to execute inside the container
-    	image = "php:7.1.13"        # docker image the container is run on
-
-    [[command]]
         template = "basic command"
     	name = "node"
     	entryPoint = "node"
@@ -92,6 +86,49 @@
 	isInteractive=false
 	impersonate=false
 	ports = ["80:8080"]
+
+
+  #
+  # PHPStorm integration
+  #
+  [[command]]
+  	isTemplate=true
+	name="basic-php-command"
+    	entrypoint="php"
+    	removeContainer=true
+    	impersonate=true
+    	workDir="${PWD}"
+    	volumes=[
+        	"/tmp:/tmp",
+	        "/home/nils:/home/nils"
+	]
+
+  [[command]]
+    	name="php7.2"
+    	image="php7.2"
+    	template="basic-php-command"
+    	envvars=[
+        	"XDEBUG_CONFIG=${XDEBUG_CONFIG}"
+	]
+	replaceArgs=[
+        	[
+	            	"-dxdebug.remote_host=127.0.0.1",
+            		"-dxdebug.remote_host=172.17.0.1",
+        	]
+	]
+
+  [[command]]
+    	name="phpmd"
+    	image="php7.2"
+    	template="basic-php-command"
+    	command="vendor/bin/phpmd"
+
+  [[command]]
+   	name="phpcs"
+    	image="php7.2"
+    	template="basic-php-command"
+    	command="vendor/bin/phpcs"
+
 
 
 
