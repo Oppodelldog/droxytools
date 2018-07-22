@@ -3,9 +3,9 @@
 This is a collection of droxy tools I configured on my local machine.
 
 **if you are intersted in how it works:**
-# [install droxy](https://github.com/Oppodelldog/droxy/releases)
-# Ensure droxy is available in your PATH.
-# Just call ```droxy clones``` 
+* [install droxy](https://github.com/Oppodelldog/droxy/releases)
+* Ensure droxy is available in your PATH.
+* Just call ```droxy clones``` 
 
 Now you have clones of droxy created.
 
