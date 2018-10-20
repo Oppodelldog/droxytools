@@ -17,31 +17,99 @@
           "${SSH_AUTH_SOCK}:/run/ssh.sock",
           "/etc/passwd:/etc/passwd:ro",
           "/etc/group:/etc/group:ro",
+	  "/tmp/.X11-unix:/tmp/.X11-unix",
       ]
 
       # environment variable mappings
       envvars = [
-	  "PWD:${PWD}",
-          "HOME:${HOME}",
-          "SSH_AUTH_SOCK:/run/ssh.sock",
+	  "PWD=${PWD}",
+          "HOME=${HOME}",
+          "SSH_AUTH_SOCK=/run/ssh.sock",
       ]
 
     [[command]]
         template = "basic command"
     	name = "node"
-    	entryPoint = "node"
-    	image = "node:8.4.0"
-    	portsFromParam = [
+	entryPoint = "node"
+    	image = "node:8.9.0"
+	envvars = [
+          "PWD=${PWD}",
+          "HOME=${HOME}",
+          "SSH_AUTH_SOCK=/run/ssh.sock",	
+          "_INTELLIJ_KARMA_INTERNAL_PARAMETER_user-config=${_INTELLIJ_KARMA_INTERNAL_PARAMETER_user-config}",
+          "_INTELLIJ_KARMA_INTERNAL_PARAMETER_debug=${_INTELLIJ_KARMA_INTERNAL_PARAMETER_debug}"
+	]
+	ports=["9876:9876"]
+    	portsFromParams = [
     	    "--inspect-brk=(\\d*)",
-    	    "--inspect=(\\d*)"
+    	    "--inspect=(\\d*)",
+	    "--port=(\\d*)"
     	]
+
+ [[command]]
+        template = "basic command"
+        name = "karma"
+        uniqueNames=true
+        entryPoint = "bash"
+        image = "node:8.9.0"
+        ip="10.0.0.2"
+        network="testnet"
+
+
+    [[command]]
+        template="basic command"
+	name="ionic-serve"
+	uniqueNames=true
+	entryPoint = "node_modules/.bin/ionic"
+	image = "node:8.9.0"
+	ports=["8200:8200","8100:8100"]
+
+    [[command]]
+        template="basic command"
+        name="ionic"
+        uniqueNames=true
+        entryPoint = "node_modules/.bin/ionic"
+        image = "node:8.9.0"
+
+    [[command]]
+        template = "basic command"
+        name = "node-with-chrome"
+        entryPoint = "node"
+        image = "node-chrome"
+	ReuseContainer=true
+        envvars = [
+		"CHROME_BIN=/usr/bin/google-chrome",
+                "_INTELLIJ_KARMA_INTERNAL_PARAMETER_user-config=/home/nils/ownCloud/shared-projects/PhpstormProjects/angular-demo/karma.conf.js",
+        ]
+        portsFromParams = [
+            "--inspect-brk=(\\d*)",
+            "--inspect=(\\d*)",
+	    "--port=(\\d*)"
+        ]
+
 
     [[command]]
         template = "basic command"
     	name = "npm"
     	#impersonate = false
+	removeContainer=true
     	entryPoint = "npm"
-    	image = "node:8.4.0"
+    	image = "node:8.9.0"
+
+    [[command]]
+        template = "basic command"
+        name = "npm-test"
+        removeContainer=true
+	entrypoint="npm"
+        command="test"
+        image = "protractor:latest"
+        envvars = [
+          "PWD=${PWD}",
+          "HOME=${HOME}",
+          "SSH_AUTH_SOCK=/run/ssh.sock",
+	  "DISPLAY=unix${DISPLAY}",
+        ]
+
 
    [[command]]
 	template = "basic command"
