@@ -29,22 +29,37 @@
 
     [[command]]
         template = "basic command"
+        name = "graphviz"
+        image = "fhamroctopus/graphviz"
+
+    [[command]]
+        template = "basic command"
+        name = "node-cmd"
+        entryPoint = "node"
+	uniqueNames=true
+        image = "node:12.4.0"
+        envvars = [
+              "PWD=${PWD}",
+              "HOME=${HOME}",
+              "SSH_AUTH_SOCK=/run/ssh.sock",
+        ]
+
+    [[command]]
+        template = "basic command"
     	name = "node"
-	entryPoint = "node"
-    	image = "node:8.9.0"
-	envvars = [
-          "PWD=${PWD}",
-          "HOME=${HOME}",
-          "SSH_AUTH_SOCK=/run/ssh.sock",	
-          "_INTELLIJ_KARMA_INTERNAL_PARAMETER_user-config=${_INTELLIJ_KARMA_INTERNAL_PARAMETER_user-config}",
-          "_INTELLIJ_KARMA_INTERNAL_PARAMETER_debug=${_INTELLIJ_KARMA_INTERNAL_PARAMETER_debug}"
-	]
-	ports=["9876:9876"]
-    	portsFromParams = [
-    	    "--inspect-brk=(\\d*)",
-    	    "--inspect=(\\d*)",
-	    "--port=(\\d*)"
-    	]
+        entryPoint = "node"
+    	image = "node:12.4.0"
+        envvars = [
+              "PWD=${PWD}",
+              "HOME=${HOME}",
+              "SSH_AUTH_SOCK=/run/ssh.sock",	
+        ]
+        ports=["9876:9876"]
+            portsFromParams = [
+                "--inspect-brk=(\\d*)",
+                "--inspect=(\\d*)",
+            "--port=(\\d*)"
+            ]
 
  [[command]]
         template = "basic command"
@@ -58,11 +73,11 @@
 
     [[command]]
         template="basic command"
-	name="ionic-serve"
-	uniqueNames=true
-	entryPoint = "node_modules/.bin/ionic"
-	image = "node:8.9.0"
-	ports=["8200:8200","8100:8100"]
+        name="ionic-serve"
+        uniqueNames=true
+        entryPoint = "node_modules/.bin/ionic"
+        image = "node:8.9.0"
+        ports=["8200:8200","8100:8100"]
 
     [[command]]
         template="basic command"
@@ -91,10 +106,11 @@
     [[command]]
         template = "basic command"
     	name = "npm"
+	uniqueNames=true
     	#impersonate = false
 	removeContainer=true
     	entryPoint = "npm"
-    	image = "node:8.9.0"
+    	image = "node:12.4.0"
 
     [[command]]
         template = "basic command"
@@ -107,9 +123,8 @@
           "PWD=${PWD}",
           "HOME=${HOME}",
           "SSH_AUTH_SOCK=/run/ssh.sock",
-	  "DISPLAY=unix${DISPLAY}",
+	     "DISPLAY=unix${DISPLAY}",
         ]
-
 
    [[command]]
 	template = "basic command"
@@ -135,12 +150,6 @@
         entryPoint = "sh"
         image = "busybox"
 
-   [[command]]
-        template = "basic command"
-        name = "rustc"
-        entryPoint = "rustc"
-        image = "rust:1.27-slim-jessie"
-
   [[command]]
         template = "basic command"
         name = "perl"
@@ -155,7 +164,11 @@
 	impersonate=false
 	ports = ["80:8080"]
 
-
+  [[command]]
+	template = "basic command"
+        name = "goswagger"
+        image = "quay.io/goswagger/swagger"
+	envvars = ["GOPATH=${GOPATH}"]
   #
   # PHPStorm integration
   #
@@ -170,6 +183,23 @@
         	"/tmp:/tmp",
 	        "/home/nils:/home/nils"
 	]
+  [[command]]
+	removeContainer=true
+	isInteractive=true
+	impersonate=true
+        name="php"
+        image="php7.2"
+        template="basic-php-command"
+	ports=["8000:8000"]
+        envvars=[
+                "XDEBUG_CONFIG=${XDEBUG_CONFIG}"
+        ]
+        replaceArgs=[
+                [
+                        "-dxdebug.remote_host=127.0.0.1",
+                        "-dxdebug.remote_host=172.17.0.1",
+                ]
+        ]
 
   [[command]]
     	name="php7.2"
@@ -197,6 +227,32 @@
     	template="basic-php-command"
     	command="vendor/bin/phpcs"
 
+  [[command]]
+        name="php7.4"
+        image="php7.4"
+        template="basic-php-command"
+        envvars=[
+                "XDEBUG_CONFIG=${XDEBUG_CONFIG}"
+        ]
+        replaceArgs=[
+                [       
+                        "-dxdebug.remote_host=127.0.0.1",
+                        "-dxdebug.remote_host=172.17.0.1",
+                ]
+        ]
 
+  [[command]]
+	name="jupyter"
+	image="jupyter/datascience-notebook"
+	addGroups = true     
+	impersonate = true    
+	removeContainer=true    
+
+	volumes=[
+		"${PWD}:/home/jovyan/work",
+	]
+	environment=[
+		"JUPYTER_ENABLE_LAB=yes",
+	]
 
 
