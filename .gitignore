@@ -1,0 +1,5 @@
+*
+!droxy.toml
+!/dockerfiles/
+!.gitignore
+!README.md
