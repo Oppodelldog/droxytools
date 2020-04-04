@@ -1,31 +1,31 @@
     Version="1"
 
     [[command]]
-      name = "basic command"  # name of the command
-      isTemplate = true       # this command can be used as a template, no command will be created
-      addGroups = true        # add current systems groups  (linux only)
-      impersonate = true      # use executing user and group for execution in the container (linux only)
-      workDir = "${PWD}"        # define working directory
-      removeContainer=true    # remove container after command has finished
-      isInteractive=true      # enable interaction with the called command
-      RequireEnvVars=true    # if true, not defined env vars that are configured will lead to an error
+        name = "basic command"  # name of the command
+        isTemplate = true       # this command can be used as a template, no command will be created
+        addGroups = true        # add current systems groups  (linux only)
+        impersonate = true      # use executing user and group for execution in the container (linux only)
+        workDir = "${PWD}"        # define working directory
+        removeContainer=true    # remove container after command has finished
+        isInteractive=true      # enable interaction with the called command
+        RequireEnvVars=true    # if true, not defined env vars that are configured will lead to an error
 
-      # volume mappings
-      volumes = [
-	  "${PWD}:${PWD}",
-          "${HOME}:${HOME}",
-          "${SSH_AUTH_SOCK}:/run/ssh.sock",
-          "/etc/passwd:/etc/passwd:ro",
-          "/etc/group:/etc/group:ro",
-	  "/tmp/.X11-unix:/tmp/.X11-unix",
-      ]
+        # volume mappings
+        volumes = [
+            "${PWD}:${PWD}",
+            "${HOME}:${HOME}",
+            "${SSH_AUTH_SOCK}:/run/ssh.sock",
+            "/etc/passwd:/etc/passwd:ro",
+            "/etc/group:/etc/group:ro",
+            "/tmp/.X11-unix:/tmp/.X11-unix",
+        ]
 
-      # environment variable mappings
-      envvars = [
-	  "PWD=${PWD}",
-          "HOME=${HOME}",
-          "SSH_AUTH_SOCK=/run/ssh.sock",
-      ]
+        # environment variable mappings
+        envvars = [
+            "PWD=${PWD}",
+            "HOME=${HOME}",
+            "SSH_AUTH_SOCK=/run/ssh.sock",
+        ]
 
     [[command]]
         template = "basic command"
@@ -36,7 +36,7 @@
         template = "basic command"
         name = "node-cmd"
         entryPoint = "node"
-	uniqueNames=true
+	    uniqueNames=true
         image = "node:12.4.0"
         envvars = [
               "PWD=${PWD}",
@@ -58,7 +58,7 @@
             portsFromParams = [
                 "--inspect-brk=(\\d*)",
                 "--inspect=(\\d*)",
-            "--port=(\\d*)"
+                "--port=(\\d*)"
             ]
 
  [[command]]
@@ -69,7 +69,6 @@
         image = "node:8.9.0"
         ip="10.0.0.2"
         network="testnet"
-
 
     [[command]]
         template="basic command"
@@ -93,15 +92,14 @@
         image = "node-chrome"
 	ReuseContainer=true
         envvars = [
-		"CHROME_BIN=/usr/bin/google-chrome",
-                "_INTELLIJ_KARMA_INTERNAL_PARAMETER_user-config=/home/nils/ownCloud/shared-projects/PhpstormProjects/angular-demo/karma.conf.js",
+		    "CHROME_BIN=/usr/bin/google-chrome",
+            "_INTELLIJ_KARMA_INTERNAL_PARAMETER_user-config=/home/nils/ownCloud/shared-projects/PhpstormProjects/angular-demo/karma.conf.js",
         ]
         portsFromParams = [
             "--inspect-brk=(\\d*)",
             "--inspect=(\\d*)",
-	    "--port=(\\d*)"
+	        "--port=(\\d*)"
         ]
-
 
     [[command]]
         template = "basic command"
@@ -120,10 +118,10 @@
         command="test"
         image = "protractor:latest"
         envvars = [
-          "PWD=${PWD}",
-          "HOME=${HOME}",
-          "SSH_AUTH_SOCK=/run/ssh.sock",
-	     "DISPLAY=unix${DISPLAY}",
+            "PWD=${PWD}",
+            "HOME=${HOME}",
+            "SSH_AUTH_SOCK=/run/ssh.sock",
+            "DISPLAY=unix${DISPLAY}",
         ]
 
    [[command]]
@@ -156,103 +154,108 @@
         entryPoint = "perl"
         image = "perl:5.20"
 
-  [[command]]
-	name = "swagger-editor"
-	image = "swaggerapi/swagger-editor"
-	isDaemon=true
-	isInteractive=false
-	impersonate=false
-	ports = ["80:8080"]
+    [[command]]
+        name = "swagger-editor"
+        image = "swaggerapi/swagger-editor"
+        isDaemon=true
+        isInteractive=false
+        impersonate=false
+        ports = ["80:8080"]
 
-  [[command]]
-	template = "basic command"
+    [[command]]
+        template = "basic command"
         name = "goswagger"
         image = "quay.io/goswagger/swagger"
-	envvars = ["GOPATH=${GOPATH}"]
+        envvars = ["GOPATH=${GOPATH}"]
+
   #
   # PHPStorm integration
   #
-  [[command]]
-  	isTemplate=true
-	name="basic-php-command"
-    	entrypoint="php"
-    	removeContainer=true
-    	impersonate=true
-    	workDir="${PWD}"
-    	volumes=[
-        	"/tmp:/tmp",
-	        "/home/nils:/home/nils"
-	]
-  [[command]]
-	removeContainer=true
-	isInteractive=true
-	impersonate=true
+    [[command]]
+        isTemplate=true
+        name="basic-php-command"
+        entrypoint="php"
+        removeContainer=true
+        impersonate=true
+        workDir="${PWD}"
+        volumes=[
+            "/tmp:/tmp",
+            "/home/nils:/home/nils"
+        ]
+    [[command]]
+        removeContainer=true
+        isInteractive=true
+        impersonate=true
         name="php"
         image="php7.2"
         template="basic-php-command"
-	ports=["8000:8000"]
+        ports=["8000:8000"]
         envvars=[
-                "XDEBUG_CONFIG=${XDEBUG_CONFIG}"
+            "XDEBUG_CONFIG=${XDEBUG_CONFIG}"
         ]
         replaceArgs=[
-                [
-                        "-dxdebug.remote_host=127.0.0.1",
-                        "-dxdebug.remote_host=172.17.0.1",
-                ]
+            [
+                    "-dxdebug.remote_host=127.0.0.1",
+                    "-dxdebug.remote_host=172.17.0.1",
+            ]
         ]
 
-  [[command]]
-    	name="php7.2"
-    	image="php7.2"
-    	template="basic-php-command"
-    	envvars=[
-        	"XDEBUG_CONFIG=${XDEBUG_CONFIG}"
-	]
-	replaceArgs=[
-        	[
-	            	"-dxdebug.remote_host=127.0.0.1",
-            		"-dxdebug.remote_host=172.17.0.1",
-        	]
-	]
+    [[command]]
+        name="php7.2"
+        image="php7.2"
+        template="basic-php-command"
+        envvars=[
+         "XDEBUG_CONFIG=${XDEBUG_CONFIG}"
+        ]
+        replaceArgs=[
+            [
+            "-dxdebug.remote_host=127.0.0.1",
+            "-dxdebug.remote_host=172.17.0.1",
+            ]
+        ]
 
-  [[command]]
+    [[command]]
     	name="phpmd"
     	image="php7.2"
     	template="basic-php-command"
     	command="vendor/bin/phpmd"
 
-  [[command]]
-   	name="phpcs"
+    [[command]]
+   	    name="phpcs"
     	image="php7.2"
     	template="basic-php-command"
     	command="vendor/bin/phpcs"
 
-  [[command]]
+    [[command]]
         name="php7.4"
         image="php7.4"
         template="basic-php-command"
         envvars=[
-                "XDEBUG_CONFIG=${XDEBUG_CONFIG}"
+            "XDEBUG_CONFIG=${XDEBUG_CONFIG}"
         ]
         replaceArgs=[
-                [       
-                        "-dxdebug.remote_host=127.0.0.1",
-                        "-dxdebug.remote_host=172.17.0.1",
-                ]
+            [
+                "-dxdebug.remote_host=127.0.0.1",
+                "-dxdebug.remote_host=172.17.0.1",
+            ]
         ]
 
-  [[command]]
-	name="jupyter"
-	image="jupyter/datascience-notebook"
-	addGroups = true     
-	impersonate = true    
-	removeContainer=true    
+    [[command]]
+        name="composer"
+        image="composer:1.10.1"
+        template="basic-php-command"
+        entrypoint="composer"
 
-	volumes=[
-		"${PWD}:/home/jovyan/work",
-	]
-	environment=[
-		"JUPYTER_ENABLE_LAB=yes",
-	]
+    [[command]]
+        name="jupyter"
+        image="jupyter/datascience-notebook"
+        addGroups = true
+        impersonate = true
+        removeContainer=true
 
-
+        volumes=[
+            "${PWD}:/home/jovyan/work",
+        ]
+        environment=[
+            "JUPYTER_ENABLE_LAB=yes",
+        ]
